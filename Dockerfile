@@ -24,7 +24,7 @@ RUN set -eu; \
 
 ENV TZ=Europe/Moscow
 
-COPY docker-entrypoint.sh gosu-amd64 /usr/local/bin/
+COPY ansible-entrypoint.sh gosu-amd64 /usr/local/bin/
 
 RUN set -eu; \
     ln -sTf "/usr/share/zoneinfo/${TZ}" /etc/localtime; \
@@ -33,9 +33,9 @@ RUN set -eu; \
     locale -a; \
     cd /usr/local/bin; \
     mv gosu-amd64 gosu; \
-    chmod 0755 docker-entrypoint.sh gosu
+    chmod 0755 ansible-entrypoint.sh gosu
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["ansible-entrypoint.sh"]
 
 ENV LANG=ru_RU.UTF-8 \
     LANGUAGE=en_US \
