@@ -61,7 +61,7 @@ else
     elif (( uid_max < host_uid )); then
       sed -i "s/^\(UID_MAX\s\+\).\+/\1${host_uid}/" /etc/login.defs
     fi
-    useradd -d /home/ansible -m -u "$host_uid" -g "$host_gid" "$inner_name"
+    useradd -d "/home/${inner_name}" -m -u "$host_uid" -g "$host_gid" "$inner_name"
   fi
   exec gosu "$inner_name" "$@"
 fi
