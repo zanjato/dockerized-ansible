@@ -44,8 +44,12 @@ fi
 if [[ -z "$host_uid" && -z "$host_gid" ]]; then
   exec "$@"
 else
-  inner_name=__ansible__
-  groupadd -g "$host_gid" -o "$inner_name"
-  useradd -d /home/ansible -m -u "$host_uid" -o -g "$host_gid" "$inner_name" || echo "$?"
+  inner_name='__ansible__'
+  if ! getent group "${host_gid}" &>/dev/null; then
+    groupadd -g "$host_gid" "$inner_name"
+  fi
+  if ! getent passwd "${host_uid}" &>/dev/null; then
+    useradd -d /home/ansible -m -u "$host_uid" -g "$host_gid" "$inner_name"
+  fi
   exec gosu "$inner_name" "$@"
 fi
