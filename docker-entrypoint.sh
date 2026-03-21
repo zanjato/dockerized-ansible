@@ -46,9 +46,21 @@ if [[ -z "$host_uid" && -z "$host_gid" ]]; then
 else
   inner_name='__ansible__'
   if ! getent group "${host_gid}" &>/dev/null; then
+    gid_max="$(awk '/^GID_MAX\s+[0-9]+/{print $2}' /etc/login.defs)"
+    if [[ -z "${gid_max:-}" ]]; then
+      echo -e "GID_MAX\t${host_gid}" >>/etc/login.def
+    elif (( gid_max < host_gid )); then
+      sed -i "s/^\(GID_MAX\s\+\).\+/\1${host_gid}/" /etc/login.defs
+    fi
     groupadd -g "$host_gid" "$inner_name"
   fi
   if ! getent passwd "${host_uid}" &>/dev/null; then
+    uid_max="$(awk '/^UID_MAX\s+[0-9]+/{print $2}' /etc/login.defs)"
+    if [[ -z "${uid_max:-}" ]]; then
+      echo -e "UID_MAX\t${host_uid}" >>/etc/login.def
+    elif (( uid_max < host_uid )); then
+      sed -i "s/^\(UID_MAX\s\+\).\+/\1${uid}/" /etc/login.defs
+    fi
     useradd -d /home/ansible -m -u "$host_uid" -g "$host_gid" "$inner_name"
   fi
   exec gosu "$inner_name" "$@"
