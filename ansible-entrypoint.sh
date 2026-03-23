@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -Eeo pipefail
+set -Eeuo pipefail
 
 if [[ "$UID" != '0' ]]; then
   echo "Скрипт ${0##*/} должен выполняться с правами root" >&2
