@@ -7,8 +7,11 @@ if [[ "$UID" != '0' ]]; then
   exit 1
 fi
 
-if [[ -n "$host_uid" ]]; then
-  if [[ -z "$host_gid" ]]; then
+uid="${host_uid:-}"
+gid="${host_gid:-}"
+
+if [[ -n "$uid" ]]; then
+  if [[ -z "$gid" ]]; then
     echo '$host_uid определено, $host_gid нет' >&2
     exit 1
   fi
@@ -22,8 +25,8 @@ if [[ -n "$host_uid" ]]; then
   fi
 fi
 
-if [[ -n "$host_gid" ]]; then
-  if [[ -z "$host_uid" ]]; then
+if [[ -n "$gid" ]]; then
+  if [[ -z "$uid" ]]; then
     echo '$host_gid определено, $host_uid нет' >&2
     exit 1
   fi
@@ -38,10 +41,10 @@ if [[ -n "$host_gid" ]]; then
 fi
 
 if [[ "${1:0:1}" = '-' ]]; then
-  set -- ansible-playbook "$@"
+  set -- jmeter "$@"
 fi
 
-if [[ -z "$host_uid" && -z "$host_gid" ]]; then
+if [[ -z "$uid" && -z "$gid" ]]; then
   exec "$@"
 else
   inner_name='__ansible__'
