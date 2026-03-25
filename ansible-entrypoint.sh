@@ -41,7 +41,7 @@ if [[ -n "$gid" ]]; then
 fi
 
 if [[ "${1:0:1}" = '-' ]]; then
-  set -- ansible-playbook "$@"
+  set -- "${EXECUTABLE:-ansible-playbook}" "$@"
 fi
 
 if [[ -z "$uid" && -z "$gid" ]]; then
