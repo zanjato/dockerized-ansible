@@ -40,7 +40,7 @@ if [[ -n "$gid" ]]; then
   fi
 fi
 
-if [[ "${1:0:1}" = '-' ]]; then
+if [[ -z "${1:-}" || "${1:0:1}" = '-' ]]; then
   set -- "${EXECUTABLE:-ansible-playbook}" "$@"
 fi
 
